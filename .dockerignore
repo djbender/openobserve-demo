@@ -49,3 +49,5 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+/fluent-bit.conf
+/parsers.conf
