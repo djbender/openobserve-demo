@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      - RAILS_ENV=development
+      - RAILS_MASTER_KEY
+    volumes:
+      - ./storage:/rails/storage
+      - ./log:/rails/log
+      - ./tmp:/rails/tmp
+    stdin_open: true
+    tty: true
