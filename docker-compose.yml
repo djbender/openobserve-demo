@@ -7,11 +7,9 @@ services:
       - RAILS_ENV=development
       - RAILS_MASTER_KEY
     volumes:
-      - ./storage:/rails/storage
-      - ./log:/rails/log
-      - ./tmp:/rails/tmp
-    stdin_open: true
-    tty: true
+      - .:/rails
+    # stdin_open: true
+    # tty: true
     command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "80"]
 
   openobserve:
@@ -21,6 +19,7 @@ services:
       - .env
     environment:
       - ZO_DATA_DIR=/data
+      - ZO_ALLOW_USER_DEFINED_SCHEMAS=true
     ports:
       - "5080:5080"
     volumes:
@@ -33,6 +32,7 @@ services:
     volumes:
       - ./log:/var/log/app
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./parsers.conf:/fluent-bit/etc/parsers.conf
     depends_on:
       - openobserve
       - web
