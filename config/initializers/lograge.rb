@@ -5,20 +5,15 @@ Rails.application.configure do
   # Silence the default ActiveRecord logger to prevent duplicate SQL logs
   config.active_record.logger = nil
 
-  # Create custom filtering logger for file only
-  class FilteringLogger < ActiveSupport::Logger
-    def add(severity, message = nil, progname = nil)
-      return if severity == Logger::INFO && message && message.to_s.include?('Rendered')
-      super
-    end
-  end
-
-  # Write structured logs to both STDOUT and file
-  file_logger = FilteringLogger.new(Rails.root.join('log', 'development.log'))
+  file_logger = ActiveSupport::Logger.new(Rails.root.join('log', "#{Rails.env}.log"))
+  file_logger.level = Logger::INFO
   stdout_logger = ActiveSupport::Logger.new(STDOUT)
+  puts({stdout_level: stdout_logger.level})
+  puts({file_level: file_logger.level})
 
   # Broadcast to both loggers
   config.lograge.logger = ActiveSupport::BroadcastLogger.new(stdout_logger, file_logger)
+  puts({broadcast_debug?: config.lograge.logger.debug?})
 
   # Keep original Rails log disabled to prevent duplicate logs
   config.lograge.keep_original_rails_log = false
